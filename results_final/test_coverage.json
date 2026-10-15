@@ -1,0 +1,10 @@
+{
+  "invoices": 11830,
+  "all_lines_price_history": 4025,
+  "partial_price_history": 7499,
+  "no_price_history": 306,
+  "all_lines_quantity_history": 9948,
+  "any_customer_quantity_fallback": 2784,
+  "all_lines_price_history_rate": 0.34023668639053256,
+  "note": "All invoices remain rankable; missing references use zero deviation and explicit history indicators. Coverage is not error-detection accuracy."
+}

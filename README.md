@@ -1,6 +1,6 @@
 # Invoice Review Prioritizer
 
-> Evaluated on a synthetic development benchmark. All reported results are from the DEV period; held-out testing has not yet been completed.
+> Evaluated on a synthetic error-injection benchmark using real retail transactions. Results include a held-out TEST period and a held-out `wrong_product` error type; they do not measure realized fraud or billing-error detection.
 
 Retail transaction-review prototype for evaluating anomaly prioritization under fixed analyst review budgets (`1%`, `2%`, `5%`, and `10%` of invoice volume).
 
@@ -21,7 +21,7 @@ Retail transaction-review prototype for evaluating anomaly prioritization under 
 
 ---
 
-## Real-Data Benchmark (`DEV` Period, 20 Seeds)
+## Development Results (`DEV` Period, 20 Seeds)
 
 Evaluated across `7,887` DEV invoices (`~235` planted errors per seed). One frozen ranking per method and seed is reused across all budget cutoffs.
 
@@ -62,6 +62,54 @@ Evaluated across `7,887` DEV invoices (`~235` planted errors per seed). One froz
 
 ---
 
+## Held-Out Results (`TEST` Period, 20 Seeds)
+
+The TEST period contains `11,830` invoices. It was held out from development, and TEST-only injections include the `wrong_product` error type. Each seed plants about `352` errors (`3%` of invoices). These remain synthetic stress-test results, not fraud-prevention performance.
+
+### Recall by Review Budget (Share of Planted Errors in Top $k$ Invoices)
+| method | 1% budget | 2% budget | 5% budget | 10% budget |
+|---|---|---|---|---|
+| random | 0.009 | 0.021 | 0.052 | 0.108 |
+| largest | 0.011 | 0.023 | 0.059 | 0.118 |
+| hist_z | 0.009 | 0.016 | 0.045 | 0.097 |
+| rules | 0.191 | 0.201 | 0.233 | 0.287 |
+| iforest | 0.116 | 0.170 | 0.253 | 0.322 |
+| oracle | 0.340 | 0.677 | 1.000 | 1.000 |
+
+### Detailed Metrics at a 5% Review Budget (`k = 592` Invoices)
+*Note: `unchanged_flags` counts reviewed invoices without a planted error; these are not confirmed clean. `value_recall` measures the share of planted invoices' recorded GBP value captured, not loss or savings.*
+
+| method | recall | sd | unchanged_flags | unchanged_flag_rate | unchanged_eligible | value_recall | oracle |
+|---|---|---|---|---|---|---|---|
+| random | 0.052 | 0.012 | 577.600 | 0.050 | 11564.050 | 0.047 | 1.000 |
+| largest | 0.059 | 0.012 | 575.050 | 0.050 | 11564.050 | 0.406 | 1.000 |
+| hist_z | 0.045 | 0.008 | 580.200 | 0.050 | 11564.050 | 0.099 | 1.000 |
+| rules | 0.233 | 0.013 | 513.750 | 0.044 | 11564.050 | 0.219 | 1.000 |
+| iforest | 0.253 | 0.015 | 506.600 | 0.044 | 11564.050 | 0.366 | 1.000 |
+
+### Recall at 5% Budget by Error Type & Severity
+| type | severity | random | largest | hist_z | rules | iforest |
+|---|---|---|---|---|---|---|
+| dup_invoice | exact | 0.064 | 0.043 | 0.053 | 0.905 | 1.000 |
+| dup_invoice | near | 0.052 | 0.045 | 0.051 | 0.603 | 0.727 |
+| price_x | 1.15 | 0.048 | 0.048 | 0.047 | 0.047 | 0.035 |
+| price_x | 1.5 | 0.050 | 0.060 | 0.025 | 0.045 | 0.038 |
+| price_x | 2.0 | 0.038 | 0.060 | 0.031 | 0.098 | 0.043 |
+| qty_x | 10 | 0.066 | 0.116 | 0.052 | 0.034 | 0.064 |
+| qty_x | 2 | 0.053 | 0.058 | 0.032 | 0.035 | 0.038 |
+| qty_x | 5 | 0.053 | 0.072 | 0.028 | 0.052 | 0.032 |
+| wrong_product | far | 0.055 | 0.050 | 0.060 | 0.128 | 0.166 |
+| wrong_product | mid | 0.038 | 0.064 | 0.053 | 0.084 | 0.038 |
+| wrong_product | near | 0.050 | 0.052 | 0.053 | 0.042 | 0.030 |
+
+### Planted Errors on Invoices With No Price History for Any Line
+| type | share_with_no_price_history |
+|---|---|
+| dup_invoice | 0.024 |
+| price_x | 0.027 |
+| qty_x | 0.017 |
+| wrong_product | 0.006 |
+
 ## Real-Data Diagnostic Results
 
 `diagnose.py` was run on the real UCI DEV period (`7,887` invoices), with 20 seeded plantings at a `3%` rate. Its full machine-readable output is in `results/diagnose_output.txt`. "Non-planted" invoices are not confirmed clean; the source has no verified error labels.
@@ -77,8 +125,8 @@ Evaluated across `7,887` DEV invoices (`~235` planted errors per seed). One froz
 ## Limits
 
 * Results come from synthetic errors planted in real retail data, not from real fraud or billing-error labels. Non-planted invoices are not verified clean.
-* The 20 plantings reuse the same underlying DEV invoices, so variation across seeds reflects simulation sensitivity, not independent populations.
-* The TEST period (30% of invoices) and the held-out `wrong_product` error type have not been evaluated. All figures here are development results, and the DEV period was examined repeatedly while this code was developed, so they are not unbiased estimates.
+* The 20 plantings reuse the same underlying invoices within each period, so variation across seeds reflects simulation sensitivity, not independent populations.
+* DEV was examined repeatedly during development. TEST was reserved for the final evaluation, but its synthetic injections and results still do not establish performance on real errors or an independent population.
 * The dataset is retail sales, not vendor bills, so results do not show performance on accounts-payable invoices.
 
 ---
@@ -98,6 +146,12 @@ To prepare the public UCI data and reproduce the DEV evaluation:
 .venv\Scripts\python.exe audit_data.py
 .venv\Scripts\python.exe run_eval.py --prepared data/prepared.pkl --seeds 20 --out results_reproduced
 .venv\Scripts\python.exe diagnose.py | Out-File -Encoding utf8 results_reproduced\diagnose_output.txt
+```
+
+To run the final DEV and held-out TEST evaluation (including TEST-only `wrong_product` injections):
+
+```powershell
+.venv\Scripts\python.exe run_eval.py --prepared data\prepared.pkl --seeds 20 --final --out results_final
 ```
 
 `run_eval.py` refuses to write into a non-empty folder, so use a new output name (the committed `results/` folder is from the original run).

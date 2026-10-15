@@ -1,0 +1,21 @@
+invoice,date,customer,n_lines,total,score,why
+544927,2011-02-24 18:02:00,,1,0.85,0.730991569353331,"line-basket multiset similarity 100% to earlier invoice 544438; no price history for any line, so prices cannot be checked"
+547865,2011-03-27 13:15:00,,1,16.95,0.7064128088141122,"line-basket multiset similarity 100% to earlier invoice 546312; no price history for any line, so prices cannot be checked"
+550671,2011-04-20 10:10:00,12457,1,179.0,0.7018886811869016,"a line's quantity is 12.5x away from the usual quantity; line-basket multiset similarity 100% to earlier invoice 550281; no price history for any line, so prices cannot be checked"
+547411,2011-03-23 09:42:00,,2,33.9,0.7015946064477835,"line-basket multiset similarity 100% to earlier invoice 546109; no price history for any line, so prices cannot be checked"
+546734,2011-03-16 11:49:00,16029,3,705.6000000000001,0.7005979131399509,"line-basket multiset similarity 100% to earlier invoice 546733; no price history for any line, so prices cannot be checked"
+539713,2010-12-21 12:43:00,,1,10.5,0.6990321434828454,a line's price is 2.2x away from that product's usual price; line-basket multiset similarity 100% to earlier invoice 539651
+541431,2011-01-18 10:01:00,12346,1,77183.6,0.6968317502016723,"a line's quantity is 74215.0x away from the usual quantity; no price history for any line, so prices cannot be checked"
+550906,2011-04-21 12:34:00,14298,59,1368.16,0.6957995218505576,a line's price is 21.7x away from that product's usual price; line-basket multiset similarity 85% to earlier invoice 550630
+537240,2010-12-06 10:08:00,,1134,13439.22,0.682129994239992,a line's price is 32.3x away from that product's usual price; a line's quantity is 48.0x away from the usual quantity
+537434,2010-12-06 16:57:00,,1348,14544.82,0.6788614105591133,a line's price is 32.3x away from that product's usual price; a line's quantity is 36.0x away from the usual quantity
+538667,2010-12-13 16:01:00,12748,1,1.9,0.6780878257529057,line-basket multiset similarity 100% to earlier invoice 538288
+537638,2010-12-07 15:28:00,,1200,10915.44,0.6767956256793358,a line's price is 15.1x away from that product's usual price; a line's quantity is 48.0x away from the usual quantity
+536876,2010-12-03 11:36:00,,1184,12739.119999999999,0.6751948345013294,a line's price is 13.3x away from that product's usual price; a line's quantity is 48.0x away from the usual quantity
+547009,2011-03-18 14:40:00,,1,1.25,0.6750151215186418,line-basket multiset similarity 100% to earlier invoice 547007
+540150,2011-01-05 11:04:00,,1,38.25,0.6711877431444738,a line's price is 2.3x away from that product's usual price; line-basket multiset similarity 100% to earlier invoice 539013
+538071,2010-12-09 14:09:00,,1298,12733.16,0.6690443943321678,a line's price is 13.0x away from that product's usual price; a line's quantity is 36.0x away from the usual quantity
+538349,2010-12-10 14:59:00,,618,5692.33,0.6652869363915517,a line's price is 13.2x away from that product's usual price; a line's quantity is 48.0x away from the usual quantity
+539958,2010-12-23 13:26:00,,510,4592.04,0.664338047007665,a line's price is 13.0x away from that product's usual price; a line's quantity is 48.0x away from the usual quantity
+538524,2010-12-13 09:35:00,,489,4703.12,0.6641625774750465,a line's price is 13.0x away from that product's usual price; a line's quantity is 48.0x away from the usual quantity
+548630,2011-04-01 12:22:00,16333,1,355.20000000000005,0.6635400998882274,a line's quantity is 64.0x away from the usual quantity; line-basket multiset similarity 100% to earlier invoice 548629
