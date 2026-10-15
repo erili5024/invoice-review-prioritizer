@@ -1,6 +1,8 @@
 # Invoice Review Prioritizer
 
-Retail transaction-review system built to evaluate anomaly prioritization under fixed analyst review budgets (`1%`, `2%`, `5%`, and `10%` of invoice volume).
+> Evaluated on a synthetic development benchmark. All reported results are from the DEV period; held-out testing has not yet been completed.
+
+Retail transaction-review prototype for evaluating anomaly prioritization under fixed analyst review budgets (`1%`, `2%`, `5%`, and `10%` of invoice volume).
 
 * **Dataset:** UCI Online Retail II (two years of UK retail sales transactions; `1,067,371` raw rows filtered to `1,031,104` valid rows across `39,434` invoices).
 * **Evaluation scope:** Public retail transaction data does not include ground-truth fraud or billing-error labels. Benchmarks below measure performance on **synthetic error-injection stress tests** across 20 random seeds (`3%` invoice error rate), not realized fraud prevention or financial savings.
@@ -62,13 +64,22 @@ Evaluated across `7,887` DEV invoices (`~235` planted errors per seed). One froz
 
 ## Real-Data Diagnostic Results
 
-`diagnose.py` was run on the real UCI DEV period (`7,887` invoices), with 20 seeded plantings at a `3%` rate. Its full machine-readable output is in `results/diagnose_output.txt`. “Non-planted” invoices are not confirmed clean; the source has no verified error labels.
+`diagnose.py` was run on the real UCI DEV period (`7,887` invoices), with 20 seeded plantings at a `3%` rate. Its full machine-readable output is in `results/diagnose_output.txt`. "Non-planted" invoices are not confirmed clean; the source has no verified error labels.
 
 1. **Budget crossover and invoice size:** At the `1%` budget, `rules` recall is `21.9%`, versus `7.4%` for `iforest`. Among planted duplicate invoices with 3+ lines, `rules` catches `74.3%` at that budget, compared with `7.2%` of single-line duplicates; `iforest` catches `20.3%` and `36.0%`, respectively. This supports the explanation that the size-weighted duplicate bonus steers the rules queue toward larger duplicates. At `5%`, `iforest` catches `75.4%` of near duplicates versus `60.2%` for `rules`, consistent with its overall recall crossover (`31.7%` vs. `29.1%`). These patterns support the mechanisms but do not prove they are the only causes.
-2. **High ordinary scores and missed price/quantity injections:** In the non-planted baseline DEV queue, `24.6%` of invoices have a maximum line z-score of at least `10`, and `24.9%` have a `rules_score` of at least `10`; among invoices with 2+ lines, that score rate is `26.2%`. This supports the score-crowding hypothesis, but these invoices are not verified legitimate. For planted price changes, the median invoice-level maximum price z-score rises from `2.91` in the baseline to `8.13` after injection (median paired increase `2.78`). For planted quantity changes, the median invoice-level maximum quantity z-score is `2.42` after injection, with a median paired increase of `0.00`: the injected line often does not become the invoice’s most anomalous quantity line. At a `5%` budget, `rules` recall is `3.9%`, `3.1%`, and `17.7%` for price multipliers `1.15x`, `1.5x`, and `2x`, and `4.3%`, `5.0%`, and `5.2%` for quantity multipliers `2x`, `5x`, and `10x`. The log-MAD floors bound the injected log shifts (for example, `ln(1.15) / 0.05 = 2.80` price spreads), but the diagnostics show the invoice-level maximum feature can also mask a change. The results support crowding and feature aggregation as plausible contributors; without verified clean labels or a counterfactual production population, they do not establish causation.
+2. **High ordinary scores and missed price/quantity injections:** In the non-planted baseline DEV queue, `24.6%` of invoices have a maximum line z-score of at least `10`, and `24.9%` have a `rules_score` of at least `10`; among invoices with 2+ lines, that score rate is `26.2%`. This supports the score-crowding hypothesis, but these invoices are not verified legitimate. For planted price changes, the median invoice-level maximum price z-score rises from `2.91` in the baseline to `8.13` after injection (median paired increase `2.78`). For planted quantity changes, the median invoice-level maximum quantity z-score is `2.42` after injection, with a median paired increase of `0.00`: the injected line often does not become the invoice's most anomalous quantity line. At a `5%` budget, `rules` recall is `3.9%`, `3.1%`, and `17.7%` for price multipliers `1.15x`, `1.5x`, and `2x`, and `4.3%`, `5.0%`, and `5.2%` for quantity multipliers `2x`, `5x`, and `10x`. The log-MAD floors bound the injected log shifts (for example, `ln(1.15) / 0.05 = 2.80` price spreads), but the diagnostics show the invoice-level maximum feature can also mask a change. The results support crowding and feature aggregation as plausible contributors; without verified clean labels or a counterfactual production population, they do not establish causation.
 3. **Top-20 queue observations (`results/inspect_top20_*.csv`):**
-   * **`rules` top 20:** 12 flags belong to wholesale customer `17850.0` on `2010-12-02`, including nine identical 4-line orders for `GBP 44.40`. This is an observed concentration and a reason to consider grouping same-day repeats for review.
+   * **`rules` top 20:** 12 flags belong to customer `17850.0` (10 on `2010-12-02`, 2 on `2010-12-01`), including nine identical 4-line orders for `GBP 44.40`. This is an observed concentration and a reason to consider grouping same-day repeats for review.
    * **`iforest` top 20:** Invoice `544927` (one anonymous line, `GBP 0.85`) is ranked first and has a 100% basket match to `544438`; it also lacks price history. Invoice `541431` (`GBP 77,183.60`, quantity `74,215`) is ranked seventh. These are queue observations, not proof of why the model assigned those ranks. In the raw UCI workbook, `C541433` appears 16 minutes after `541431` on the same date for the same customer and product, with quantity `-74,215` at the same unit price `1.04`. This verifies a matching full-quantity cancellation entry in the source data, but not the accounting or settlement context.
+
+---
+
+## Limits
+
+* Results come from synthetic errors planted in real retail data, not from real fraud or billing-error labels. Non-planted invoices are not verified clean.
+* The 20 plantings reuse the same underlying DEV invoices, so variation across seeds reflects simulation sensitivity, not independent populations.
+* The TEST period (30% of invoices) and the held-out `wrong_product` error type have not been evaluated. All figures here are development results, and the DEV period was examined repeatedly while this code was developed, so they are not unbiased estimates.
+* The dataset is retail sales, not vendor bills, so results do not show performance on accounts-payable invoices.
 
 ---
 
@@ -85,8 +96,10 @@ To prepare the public UCI data and reproduce the DEV evaluation:
 
 ```powershell
 .venv\Scripts\python.exe audit_data.py
-.venv\Scripts\python.exe run_eval.py --prepared data/prepared.pkl --seeds 20 --out results
-.venv\Scripts\python.exe diagnose.py > results/diagnose_output.txt
+.venv\Scripts\python.exe run_eval.py --prepared data/prepared.pkl --seeds 20 --out results_reproduced
+.venv\Scripts\python.exe diagnose.py | Out-File -Encoding utf8 results_reproduced\diagnose_output.txt
 ```
+
+`run_eval.py` refuses to write into a non-empty folder, so use a new output name (the committed `results/` folder is from the original run).
 
 `audit_data.py` downloads Daqing Chen, Online Retail II, UCI Machine Learning Repository (CC BY 4.0): https://doi.org/10.24432/C5CG6D
