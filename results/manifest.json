@@ -1,0 +1,115 @@
+{
+  "phase": "development",
+  "source_sha256": "1d15e7e46be3725121dd48fdb6000c3661c09f5442286441db11a6e54b76759f",
+  "public_zip_sha256": "572e36277c2390fbfde10664750731e0a86f55e33470d91919085f0408e67bfb",
+  "source": "UCI Online Retail II",
+  "data_audit": {
+    "raw_rows": 1067371,
+    "missing_customer_rows": 243007,
+    "excluded_cancelled": 19494,
+    "excluded_invalid_required": 0,
+    "excluded_nonpositive": 6207,
+    "excluded_nonproduct": 4794,
+    "ambiguous_invoice_ids": 82,
+    "excluded_ambiguous_invoice_rows": 5772,
+    "kept_rows": 1031104,
+    "invoices": 39434,
+    "anonymous_rows": 231346,
+    "repeated_exact_lines": 33590
+  },
+  "periods": {
+    "H": {
+      "invoices": 13802,
+      "rows": 329890,
+      "first": "2009-12-01 07:45:00",
+      "last": "2010-09-17 13:30:00"
+    },
+    "F": {
+      "invoices": 5915,
+      "rows": 155137,
+      "first": "2010-09-17 13:38:00",
+      "last": "2010-12-01 09:37:00"
+    },
+    "DEV": {
+      "invoices": 7887,
+      "rows": 219605,
+      "first": "2010-12-01 09:41:00",
+      "last": "2011-05-27 10:37:00"
+    },
+    "TEST": {
+      "invoices": 11830,
+      "rows": 326472,
+      "first": "2011-05-27 10:41:00",
+      "last": "2011-12-09 12:50:00"
+    }
+  },
+  "settings": {
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19
+    ],
+    "rate": 0.03,
+    "budgets": [
+      0.01,
+      0.02,
+      0.05,
+      0.1
+    ],
+    "model_seed": 0,
+    "severities": {
+      "price_x": [
+        1.15,
+        1.5,
+        2.0
+      ],
+      "qty_x": [
+        2,
+        5,
+        10
+      ],
+      "dup_invoice": [
+        "exact",
+        "near"
+      ],
+      "wrong_product": [
+        "near",
+        "mid",
+        "far"
+      ]
+    },
+    "held_out": [
+      "wrong_product"
+    ],
+    "MIN_HIST": 5
+  },
+  "code_sha256": {
+    "core.py": "7e49b3dcae0765351a87d68c5d36df8a929cb913b64d86f7fe5dc951b22cf976",
+    "run_eval.py": "8eec49e4af5d8f0ca8426a1d78937537c5ce3e7db89dc2b9660496505dbe6f74"
+  },
+  "python": "3.13.2",
+  "packages": {
+    "numpy": "2.2.6",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.7.2"
+  },
+  "claim": "Synthetic stress test; repeated plantings share one underlying dataset and are not independent real populations.",
+  "model_fit": "Uninjected earlier F slice, not verified clean; price/quantity references frozen on earlier history. Duplicate references include strictly earlier invoices within scored window, including injected ones."
+}

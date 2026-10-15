@@ -1,0 +1,21 @@
+invoice,date,customer,n_lines,total,score,why
+542303,2011-01-27 11:05:00,12539,93,1715.85,20.0,a line's price is 2.0x away from that product's usual price; a line's quantity is 12.0x away from the usual quantity; line-basket multiset similarity 100% to earlier invoice 540550
+550906,2011-04-21 12:34:00,14298,59,1368.16,18.507462686567166,a line's price is 21.7x away from that product's usual price; line-basket multiset similarity 85% to earlier invoice 550630
+548973,2011-04-05 11:44:00,15674,19,355.12,16.45546784526102,a line's price is 1.4x away from that product's usual price; line-basket multiset similarity 100% to earlier invoice 548215
+547390,2011-03-22 16:08:00,12352,7,120.33,14.620981203732969,a line's quantity is 4.0x away from the usual quantity; line-basket multiset similarity 100% to earlier invoice 546869
+537868,2010-12-08 16:49:00,12433,148,3735.96,13.927634731965586,a line's price is 1.3x away from that product's usual price; line-basket multiset similarity 84% to earlier invoice 536532
+536630,2010-12-02 10:56:00,17850,32,488.92,13.883120288819148,line-basket multiset similarity 100% to earlier invoice 536609
+553654,2011-05-18 11:08:00,13094,3,205.74,13.297492863804678,line-basket multiset similarity 100% to earlier invoice 553177
+539713,2010-12-21 12:43:00,,1,10.5,13.0,a line's price is 2.2x away from that product's usual price; line-basket multiset similarity 100% to earlier invoice 539651
+540150,2011-01-05 11:04:00,,1,38.25,13.0,a line's price is 2.3x away from that product's usual price; line-basket multiset similarity 100% to earlier invoice 539013
+536752,2010-12-02 14:06:00,17850,38,781.32,12.83048870987178,line-basket multiset similarity 89% to earlier invoice 536690
+536628,2010-12-02 10:54:00,17850,32,461.12,12.706649700583855,line-basket multiset similarity 88% to earlier invoice 536609
+536753,2010-12-02 14:07:00,17850,4,44.400000000000006,12.535034112782878,line-basket multiset similarity 100% to earlier invoice 536751
+536407,2010-12-01 11:34:00,17850,4,44.400000000000006,12.535034112782878,line-basket multiset similarity 100% to earlier invoice 536399
+536399,2010-12-01 10:52:00,17850,4,44.400000000000006,12.535034112782878,line-basket multiset similarity 100% to earlier invoice 536377
+536688,2010-12-02 12:24:00,17850,4,44.400000000000006,12.535034112782878,line-basket multiset similarity 100% to earlier invoice 536631
+536629,2010-12-02 10:55:00,17850,4,44.400000000000006,12.535034112782878,line-basket multiset similarity 100% to earlier invoice 536614
+536603,2010-12-02 08:40:00,17850,4,44.400000000000006,12.535034112782878,line-basket multiset similarity 100% to earlier invoice 536601
+536610,2010-12-02 09:42:00,17850,4,44.400000000000006,12.535034112782878,line-basket multiset similarity 100% to earlier invoice 536603
+536614,2010-12-02 09:44:00,17850,4,44.400000000000006,12.535034112782878,line-basket multiset similarity 100% to earlier invoice 536610
+536631,2010-12-02 10:58:00,17850,4,44.400000000000006,12.535034112782878,line-basket multiset similarity 100% to earlier invoice 536629
